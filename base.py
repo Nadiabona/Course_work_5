@@ -18,13 +18,13 @@ class Arena(metaclass=BaseSingleton):
     game_is_running = False
     battle_result = None
 
-    def start_game(self, player: BaseUnit, enemy: BaseUnit):
+    def game_start(self, player: BaseUnit, enemy: BaseUnit):
         self.player = player
         self.enemy = enemy
         self.game_is_running = True
 
     def _check_players_hp(self):
-        """ПРОВЕРКА ЗДОРОВЬЯ ИГРОКА И ВРАГА"""
+        """Проверка здоровья игроков"""
 
         if self.player.hp <= 0 and self.enemy.hp <= 0:
             self.battle_result = 'Ничья'
@@ -54,16 +54,16 @@ class Arena(metaclass=BaseSingleton):
             self.enemy.stamina += self.STAMINA_PER_ROUND
 
     def next_turn(self):
-        """Следующий ход срабатывает когда игрок пропускает ход или когда игрок наносит удар."""
+        """Следующий ход срабатывает если игрок пропускает ход или когда игрок наносит удар."""
 
-        # создаем поле result и проверяем что вернется в результате функции self._check_players_hp
+        #  проверяем здоровье игрока
         result = self._check_players_hp()
 
         # если result -> возвращаем его
         if result:
             return result
 
-        # если же результата пока нет и после завершения хода игра продолжается,
+        # если же результата пока нет и после завершения хода игра может быть продожена,
         # тогда запускаем процесс регенирации стамины и здоровья для игроков (self._stamina_regeneration)
         # и вызываем функцию self.enemy.hit(self.player) - ответный удар врага
 
@@ -72,7 +72,7 @@ class Arena(metaclass=BaseSingleton):
         return self.enemy.hit(self.player)
 
     def _end_game(self) -> str:
-        """КНОПКА ЗАВЕРШЕНИЕ ИГРЫ"""
+        """Кнопка завершения игры"""
 
         # очищаем синглтон
         self._instances = {}
@@ -83,13 +83,13 @@ class Arena(metaclass=BaseSingleton):
         return result
 
     def player_hit(self) -> str:
-        """КНОПКА УДАР ИГРОКА"""
+        """Кнопка удара игрока"""
 
         result = self.player.hit(self.enemy)
         return f"{result} {self.next_turn()}"
 
     def player_use_skill(self):
-        """КНОПКА ИГРОК ИСПОЛЬЗУЕТ УМЕНИЕ"""
+        """Кнопка использования умения """
 
         result = self._check_players_hp()
         if result:

@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 class Skill(ABC):
     """
-    Базовый класс умения
+    Базовый класс умений
     """
     user = None
     target = None
@@ -31,7 +31,7 @@ class Skill(ABC):
     def skill_effect(self) -> str:
         pass
 
-    def _is_stamina_enough(self):
+    def _stamina_enough(self):
         return self.user.stamina > self.stamina
 
     def use(self, user: BaseUnit, target: BaseUnit) -> str:
@@ -41,12 +41,12 @@ class Skill(ABC):
         """
         self.user = user
         self.target = target
-        if self._is_stamina_enough:
+        if self._stamina_enough:
             return self.skill_effect()
         return f"{self.user.name} попытался использовать {self.name} но у него не хватило выносливости."
 
 
-class FuryPunch(Skill):
+class FerosiousKick(Skill):
     name = "Свирепый пинок"
     stamina = 6
     damage = 12

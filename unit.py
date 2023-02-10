@@ -8,11 +8,11 @@ from typing import Optional
 
 class BaseUnit(ABC):
     """
-    Базовый класс юнита
+    Базовый класс
     """
     def __init__(self, name: str, unit_class: UnitClass):
         """
-        При инициализации класса Unit используем свойства класса UnitClass
+        Инициализируем класса Unit используем свойства класса UnitClass
         """
         self.name = name
         self.unit_class = unit_class
@@ -24,34 +24,34 @@ class BaseUnit(ABC):
 
     @property
     def health_points(self):
-        """возвращаем аттрибут hp в красивом виде"""
+        """Возвращает уровень hp"""
         return round(self.hp, 1)
 
     @property
     def stamina_points(self):
-        """возвращаем аттрибут stamona в красивом виде"""
-        return  round(self.stamina, 1)
+        """Возвращает уровень  stamina"""
+        return round(self.stamina, 1)
 
     def equip_weapon(self, weapon: Weapon):
-        """присваиваем нашему герою новое оружие"""
+        """ Даем оружие"""
         self.weapon = weapon
-        return f"{self.name} экипирован оружием {self.weapon.name}"
+        return f"{self.name} Вооружен оружием {self.weapon.name}"
 
     def equip_armor(self, armor: Armor):
-        """одеваем новую броню"""
+        """Даем броню"""
         self.armor = armor
-        return f"{self.name} экипирован броней {self.weapon.name}"
+        return f"{self.name} Экипирован броней {self.weapon.name}"
 
     def _count_damage(self, target: BaseUnit) -> int:
-        """расчитываем урон, нанесенный игроком"""
+        """Рассчитываем урон, нанесенный игроком"""
         damage = self.weapon.damage * self.unit_class.attack
 
-        #уменьшаем выносливоссть атакующего при ударе
+        #"""Понижаем выносливость атакующего после удара""
         self.stamina -= self.weapon.stamina_per_hit
 
-        #  если у защищающегося нехватает выносливости - его броня игнорируется
-        #  после всех расчетов цель получает урон - target.get_damage(damage)
-        #  и возвращаем предполагаемый урон для последующего вывода пользователю в текстовом виде
+        #  если у защищающегося надостаточно stamoina, его броня игнорируется
+        #  рассчитываем наносимый - target.get_damage(damage)
+        #  и возвращаем предполагаемый урон для последующего вывода пользователю
         if target.stamina >= target.armor.stamina_per_turn:
             target_armor = target.armor.defence * target.unit_class.armor
             target.stamina -= target.armor.stamina_per_turn
@@ -77,8 +77,7 @@ class BaseUnit(ABC):
     def use_skill(self, target: BaseUnit) -> str:
         """
         метод использования умения.
-        если умение уже использовано возвращаем строку
-        Навык использован
+        если умение уже использовано возвращаем Навык использован
         Если же умение не использовано тогда выполняем функцию
         self.unit_class.skill.use(user=self, target=target)
         и уже эта функция вернем нам строку которая характеризует выполнение умения
@@ -100,14 +99,14 @@ class PlayerUnit(BaseUnit):
         """
 
         if self.stamina < self.weapon.stamina_per_hit:
-            return f"{self.name} попытался использовать {self.weapon.name}, но у него не хватило выносливости."
+            return f"{self.name} Попытался использовать {self.weapon.name}, но у него не хватило выносливости."
 
         damage = self._count_damage(target)
         if damage > 0:
-            return f"{self.name} используя {self.weapon.name} пробивает {target.armor.name} соперника и наносит {damage} урона."
+            return f"{self.name} Используя {self.weapon.name} пробивает {target.armor.name} соперника и наносит {damage} урона."
 
         if damage == 0:
-            return f"{self.name} используя {self.weapon.name} наносит удар, но {target.armor.name} cоперника его останавливает."
+            return f"{self.name} Используя {self.weapon.name} наносит удар, но {target.armor.name} cоперника его останавливает."
 
 
 class EnemyUnit(BaseUnit):

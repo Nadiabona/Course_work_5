@@ -20,10 +20,10 @@ def menu_page():
     return render_template("index.html")
 
 
-
 @app.route("/fight/")
 def start_fight():
-    arena.start_game(player=heroes["player"], enemy=heroes["enemy"])
+    """Кнопка начала игры"""
+    arena.game_start(player=heroes["player"], enemy=heroes["enemy"])
     return render_template("fight.html", heroes=heroes)
 
 @app.route("/fight/hit")
@@ -48,7 +48,7 @@ def use_skill():
 
 @app.route("/fight/pass-turn")
 def pass_turn():
-    """Кнопка пропустить ход"""
+    """Кнопка пропуска хода"""
     if arena.game_is_running:
         result = arena.next_turn()
     else:
