@@ -4,6 +4,7 @@ from classes import unit_classes
 from base import Arena
 from unit import PlayerUnit, EnemyUnit, BaseUnit
 
+
 app = Flask(__name__)
 
 heroes = {
